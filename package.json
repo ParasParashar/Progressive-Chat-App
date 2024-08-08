@@ -1,0 +1,30 @@
+{
+  "name": "progressive-chat-app",
+  "version": "1.1.1",
+  "description": "This is full stack chat app powered with postgresql node express redis socket-io web-rtc react typescript and react-query",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon  backend/index.js",
+    "build": "prisma generate --schema=backend/prisma/schema.prisma && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "node backend/index.js"
+  },
+  "type": "module",
+  "author": "Paras Parashar",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.16.2",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.18.0",
+    "redis": "^4.7.0",
+    "socket.io": "^4.7.5"
+  }
+}

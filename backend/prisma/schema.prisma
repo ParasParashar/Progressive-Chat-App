@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// declaring enum for the gender
+
+enum Gender {
+  male
+  female
+}
+
+enum NotificationType {
+  message_seen
+  new_message
+}
+
+model User {
+  id               String            @id @default(cuid())
+  username         String            @unique
+  fullname         String
+  password         String
+  gender           Gender
+  profilePic       String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  conversationsIds String[]
+  conversations    Conversation[]
+  messages         Message[]
+  Notifications    Notification[]
+  groupMemberships GroupMembership[]
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  participantsIds String[]
+  participants    User[]
+
+  messageIds String[]
+  messages   Message[]
+
+  groupId     String?
+  group       Group?  @relation(fields: [groupId], references: [id])
+  isGroupChat Boolean @default(false)
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  body           String
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  seenByIds      String[]
+  seen           Boolean      @default(false)
+  groupId        String?
+  group          Group?       @relation(fields: [groupId], references: [id])
+}
+
+model Group {
+  id            String            @id @default(cuid())
+  name          String
+  messages      Message[]
+  conversations Conversation[]
+  members       GroupMembership[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model GroupMembership {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  groupId   String
+  group     Group    @relation(fields: [groupId], references: [id])
+  isAdmin   Boolean  @default(false)
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  type      NotificationType
+  isRead    Boolean          @default(false)
+}
