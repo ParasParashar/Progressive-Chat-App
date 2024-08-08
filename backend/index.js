@@ -1,14 +1,32 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieparser from "cookie-parser";
-import path from "path";
 import authRoute from "./routes/auth.route.js";
 import groupRoute from "./routes/group.route.js";
 import messageRoute from "./routes/messages.route.js";
 import { app, server } from "./socket/socket.js";
+import cors from "cors";
+
 dotenv.config();
+
+const allowedOrigins = ["http://localhost:3000", process.env.FRONTEND_URL];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PUT"],
+    credentials: true,
+  })
+);
 const PORT = process.env.PORT || 4000;
-const __dirname = path.resolve();
+
 app.use(cookieparser());
 app.use(express.json());
 app.get("/", (res) => {
