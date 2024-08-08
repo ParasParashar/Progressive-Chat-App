@@ -11,18 +11,13 @@ const PORT = process.env.PORT || 4000;
 const __dirname = path.resolve();
 app.use(cookieparser());
 app.use(express.json());
+app.get("/", (res) => {
+  res.send("This is a advanced backend of the progressive chat app");
+});
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/group", groupRoute);
 
-console.log(process.env.NODE_ENV);
-if (process.env.NODE_ENV === "production") {
-  console.log("Server started");
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-  });
-}
 server.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
 });
