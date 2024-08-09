@@ -5,8 +5,12 @@ const generateToken = (userId, res) => {
       expiresIn: "15d",
     });
     res.cookie("jwt", token, {
-      maxAge: 15 * 24 * 60 * 60 * 1000,
+      maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+      httpOnly: true, // Ensure this is set
+      secure: process.env.NODE_ENV === "production", // Only true in production
+      sameSite: "None", // Required for cross-origin cookies
     });
+
     return token;
   } catch (error) {
     console.error("Error in generating token", error.message);

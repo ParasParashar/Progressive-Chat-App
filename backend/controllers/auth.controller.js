@@ -90,6 +90,7 @@ export const logoutController = async (req, res) => {
 };
 export const getUserController = async (req, res) => {
   try {
+    console.log(req.user.id, "not able to get the uiser id");
     const userId = req.user.id;
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
@@ -106,6 +107,7 @@ export const getUserController = async (req, res) => {
     res.status(500).json({ error: "Server Error " + error.message });
   }
 };
+
 export const getUserDataController = async (req, res) => {
   try {
     const { id } = req.params;

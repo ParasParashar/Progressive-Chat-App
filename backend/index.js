@@ -11,17 +11,16 @@ dotenv.config();
 
 const allowedOrigins = ["http://localhost:3000", process.env.FRONTEND_URL];
 
+app.use(cookieparser());
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
   })
 );
-const PORT = process.env.PORT || 4000;
-
-app.use(cookieparser());
 app.use(express.json());
-app.get("/", (res) => {
+
+app.get("/", (req, res) => {
   res.json({
     message: "This is a advanced backend of the progressive chat app",
   });
@@ -30,6 +29,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/group", groupRoute);
 
+const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
 });
