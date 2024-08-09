@@ -93,12 +93,15 @@ io.on("connection", (socket) => {
   });
   // handle the webRTC
   socket.on("room:join", (data) => {
-    const { userId, room } = data;
+    const { userId, room, receiverId, fullname } = data;
     console.log("webRTC joined room", data);
     const socketId = getReceiverSocketId(userId);
     socket.join(room);
     io.to(room).emit("user:joined", { userId: userId, socketId: socketId });
+    const receiverSocketId = getReceiverSocketId(receiverId);
     io.to(socket.id).emit("room:join", data);
+    /* event for to call the user and user notification for the call */
+    io.to(receiverSocketId).emit("create:user:call", data);
   });
 
   socket.on("user:call", ({ to, offer }) => {
@@ -113,9 +116,18 @@ io.on("connection", (socket) => {
   socket.on("peer:nego:done", ({ to, ans }) => {
     io.to(to).emit("peer:nego:final", { from: socket.id, ans });
   });
-  socket.on("call:disconnected", ({ to }) => {
-    console.log("socket disconnected, remove call");
-    io.to(to).emit("call:disconnected", { from: socket.id });
+  socket.on("call:disconnected", ({ to, room }) => {
+    const userInRoom = room.split(":");
+    const receiverId = userInRoom.find((id) => id !== userId);
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    io.to(receiverSocketId).emit("call:disconnected", { from: socket.id });
+    socket.leave(room);
+  });
+  socket.on("call:rejected", ({ userId, room, receiverId }) => {
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    io.to(receiverSocketId).emit("call:rejected", { room: room });
+    io.to(room).emit("call:rejected", { room: room });
+    socket.leave(room);
   });
 
   // socker.on is used to listen to the events. for both client and the server

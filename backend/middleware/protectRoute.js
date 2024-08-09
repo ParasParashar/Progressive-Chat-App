@@ -3,12 +3,10 @@ import prisma from "../db/prisma.js";
 const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
-    console.log("cookie data: " + token);
     if (!token) {
       return res.status(401).json({ error: "You need to login first." });
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decoded data: " + decoded);
     if (!decoded) {
       return res.status(401).json({ error: "Unauthorized!! Invalid token." });
     }
@@ -21,7 +19,6 @@ const protectRoute = async (req, res, next) => {
         profilePic: true,
       },
     });
-    console.log(user, "this is the user data");
     if (!user) {
       return res.status(401).json({ error: "User not found" });
     }
