@@ -5,8 +5,8 @@ export const handleWebRTCEvents = (
   getReceiverSocketId,
   io
 ) => {
-  //   const userId = socket.handshake.query.userId;
-  //   const webrtcChannel = `webrtc:user:${userId}`;
+  const userId = socket.handshake.query.userId;
+  // const webrtcChannel = `webrtc:user:${userId}`;
 
   //   subClient.subscribe(webrtcChannel);
 
