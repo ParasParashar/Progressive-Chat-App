@@ -47,19 +47,19 @@ export const handleWebRTCEvents = (
     pubClient.publish(`webrtc:user:${receiverId}`, JSON.stringify(parsedData));
   });
   socket.on("user:call", ({ to, offer }) => {
-    const callData = { type: "call-offer", data: { from: socket.id, offer } };
+    const callData = { type: "call-offer", data: { from: userId, offer } };
     pubClient.publish(`webrtc:user:${to}`, JSON.stringify(callData));
   });
 
   socket.on("call:accepted", ({ to, ans }) => {
-    const answerData = { type: "call-answer", data: { from: socket.id, ans } };
+    const answerData = { type: "call-answer", data: { from: userId, ans } };
     pubClient.publish(`webrtc:user:${to}`, JSON.stringify(answerData));
   });
 
   socket.on("peer:nego:needed", ({ to, offer }) => {
     const negoNeededData = {
       type: "peer-nego-needed",
-      data: { from: socket.id, offer },
+      data: { from: userId, offer },
     };
     pubClient.publish(`webrtc:user:${to}`, JSON.stringify(negoNeededData));
   });
@@ -67,7 +67,7 @@ export const handleWebRTCEvents = (
   socket.on("peer:nego:done", ({ to, ans }) => {
     const negoDoneData = {
       type: "peer-nego-final",
-      data: { from: socket.id, ans },
+      data: { from: userId, ans },
     };
     pubClient.publish(`webrtc:user:${to}`, JSON.stringify(negoDoneData));
   });
