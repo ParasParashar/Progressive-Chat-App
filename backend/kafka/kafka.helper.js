@@ -123,26 +123,3 @@ export const consumeMessages = async (topic) => {
     );
   }
 };
-
-// export const consumeMessages = async (topic) => {
-//   try {
-//     console.log('Kafka consumer setup successfully')
-//     await consumer.connect();
-//     await consumer.subscribe({ topic: topic, fromBeginning: true });
-//     await consumer.run({
-//       eachMessage: async ({ topic, partition, message }) => {
-//         console.log("Data received of the kafka consumer");
-//         console.log({
-//           value: message.value.toString(),
-//           topic,
-//           partition,
-//         });
-//       },
-//     });
-//   } catch (error) {
-//     console.log(
-//       "Error in consuming messages of the kafka consumer ",
-//       error.message
-//     );
-//   }
-// };
