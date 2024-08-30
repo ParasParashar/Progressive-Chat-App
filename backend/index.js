@@ -6,6 +6,9 @@ import groupRoute from "./routes/group.route.js";
 import messageRoute from "./routes/messages.route.js";
 import { app, server } from "./socket/socket.js";
 import cors from "cors";
+import { connectKafkaProducer } from "./kafka/kafka.config.js";
+import { consumeMessages } from "./kafka/kafka.helper.js";
+const PORT = process.env.PORT || 4000;
 
 dotenv.config();
 
@@ -29,7 +32,11 @@ app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/group", groupRoute);
 
-const PORT = process.env.PORT || 4000;
+// adding the kafka consumer
+consumeMessages(process.env.KAFKA_TOPIC);
+
 server.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
+  // connect to kafka when the server is runnning
+  connectKafkaProducer();
 });

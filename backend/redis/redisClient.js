@@ -1,6 +1,6 @@
 import { Redis } from "ioredis";
 const redis = new Redis({
-  host: "redis-2849bf3b-prsprshr-2153.a.aivencloud.com",
+  host: process.env.REDIS_HOST,
   port: 24319,
   username: "default",
   password: process.env.REDIS_PASSWORD,
