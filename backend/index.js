@@ -8,9 +8,13 @@ import { app, server } from "./socket/socket.js";
 import cors from "cors";
 import { connectKafkaProducer } from "./kafka/kafka.config.js";
 import { consumeMessages } from "./kafka/kafka.helper.js";
+import job from "./utils/cron.js";
+
 const PORT = process.env.PORT || 4000;
 
 dotenv.config();
+// adding the cron job to send the request to server in every 14 minutes
+job.start();
 
 const allowedOrigins = ["http://localhost:3000", process.env.FRONTEND_URL];
 
